@@ -1,0 +1,10 @@
+version: '3.1'
+services:
+  project-manager:
+    build: ./
+    container_name: project-manager
+    ports:
+      - "8090:8090"
+    environment:
+      - SERVER_PORT=8090
+      - SPRING_DATASOURCE_URL=jdbc:h2:file:./db/project
