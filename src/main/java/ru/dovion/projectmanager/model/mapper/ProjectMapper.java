@@ -20,6 +20,9 @@ public class ProjectMapper {
         if (project.getSubprojects() == null) {
             project.setSubprojects(List.of());
         }
+        if (project.getTasks() == null) {
+            project.setTasks(List.of());
+        }
         return new ProjectOutDto(project.getId(), project.getTitle(),
                 project.getSubprojects().stream().map(Project::getId).collect(Collectors.toList()),
                 project.getTasks().stream().map(TaskMapper::toOutDto).toList(),

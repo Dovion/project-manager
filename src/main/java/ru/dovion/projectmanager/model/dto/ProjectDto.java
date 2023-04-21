@@ -14,6 +14,6 @@ public class ProjectDto implements Serializable {
     @NotBlank(message = "Название проекта не может быть пустым")
     @Schema(defaultValue = "New project")
     private final String title;
-
+    @Schema(defaultValue = "1", description = "Следует удалить данное свойство, если объект не является подпроектом")
     private final Long parent;
 }

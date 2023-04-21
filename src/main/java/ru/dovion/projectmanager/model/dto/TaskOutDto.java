@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.dovion.projectmanager.model.Status;
 import ru.dovion.projectmanager.model.TaskType;
+import ru.dovion.projectmanager.model.User;
 
 import java.time.LocalDateTime;
 
@@ -24,6 +25,8 @@ public class TaskOutDto {
     private Status status;
 
     private Long project;
+
+    private User user;
 
     private LocalDateTime startDate;
 

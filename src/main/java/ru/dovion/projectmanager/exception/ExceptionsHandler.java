@@ -70,4 +70,16 @@ public class ExceptionsHandler {
         return modelAndView;
     }
 
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(value = {SecurityException.class})
+    public ModelAndView securityExceptionHandler(Exception ex) {
+        ModelAndView modelAndView = new ModelAndView(new MappingJackson2JsonView());
+        modelAndView.addObject("status", HttpStatus.UNAUTHORIZED);
+        modelAndView.addObject("reason", "Unauthorized");
+        modelAndView.addObject("message", ex.getMessage());
+        modelAndView.addObject("timestamp",
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        modelAndView.setStatus(HttpStatus.UNAUTHORIZED);
+        return modelAndView;
+    }
 }

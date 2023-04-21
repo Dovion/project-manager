@@ -17,9 +17,7 @@ public interface UserService {
 
     void deleteTask(Long id);
 
-
-    List<TaskOutDto> getAllTasks();
-
-
     List<ProjectOutDto> getAllProjects();
+
+    public List<TaskOutDto> getMyTasks();
 }

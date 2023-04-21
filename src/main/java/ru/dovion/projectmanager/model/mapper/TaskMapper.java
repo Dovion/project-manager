@@ -9,12 +9,13 @@ public class TaskMapper {
 
     private final static ModelMapper modelMapper = new ModelMapper();
 
+
     public static Task fromDto(TaskDto taskDto) {
         return modelMapper.map(taskDto, Task.class);
     }
 
     public static TaskOutDto toOutDto(Task task) {
         return new TaskOutDto(task.getId(), task.getTaskType(), task.getTitle(), task.getDescription(),
-                task.getStatus(), task.getProject().getId(), task.getStartDate(), task.getUpdateDate());
+                task.getStatus(), task.getProject().getId(), task.getUser(), task.getStartDate(), task.getUpdateDate());
     }
 }

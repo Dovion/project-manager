@@ -1,7 +1,9 @@
 package ru.dovion.projectmanager.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +26,8 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/user-api")
+@PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+@SecurityRequirement(name = "basicAuth")
 public class UserController {
 
     private final UserService userService;
@@ -50,9 +54,9 @@ public class UserController {
     }
 
     @GetMapping("/task")
-    @Operation(summary = "Получение всех задач")
-    public List<TaskOutDto> getAllTasks() {
-        return userService.getAllTasks();
+    @Operation(summary = "Получение задач пользователя")
+    public List<TaskOutDto> getMyTasks() {
+        return userService.getMyTasks();
     }
 
     @GetMapping("/project")

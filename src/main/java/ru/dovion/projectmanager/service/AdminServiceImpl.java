@@ -17,6 +17,7 @@ import ru.dovion.projectmanager.repository.TaskRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -62,6 +63,7 @@ public class AdminServiceImpl implements AdminService {
                                               "Передан неверный идентификатор родительского проекта"));
         }
         Project newProject = ProjectMapper.fromDto(project);
+        newProject.setId(null);
         newProject.setParent(parent);
         return ProjectMapper.toOutDto(projectRepository.saveAndFlush(newProject));
     }
@@ -72,10 +74,17 @@ public class AdminServiceImpl implements AdminService {
         var foundedProject = projectRepository.findById(id)
                                               .orElseThrow(() -> new EntityNotFoundException(
                                                       "Передан неверный идентификатор проекта"));
-        var foundedParent = projectRepository.findById(project.getParent())
+        Project foundedParent = null;
+        if (project.getParent() != null) {
+            foundedParent = projectRepository.findById(project.getParent())
                                              .orElseThrow(() -> new EntityNotFoundException(
                                                      "Передан неверный идентификатор родительского проекта"));
-        if (foundedParent.getParent() != null) {
+        }
+
+        if (foundedParent != null && foundedParent.getParent() != null) {
+            if (foundedParent.getId().equals(id)) {
+                throw new BusinessException("Проект не может быть родителем для самого себя");
+            }
             List<Long> idList = new ArrayList<>();
             Project parent = foundedParent.getParent();
             while (parent != null) {
@@ -83,7 +92,7 @@ public class AdminServiceImpl implements AdminService {
                 parent = parent.getParent();
             }
             if (idList.contains(foundedProject.getId())) {
-                throw new BusinessException("Подпроект не может быть родительским для родителя");
+                throw new BusinessException("Подпроект не может быть родительским для самого родителя");
             }
         }
         foundedProject.setTitle(project.getTitle());
@@ -94,6 +103,15 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void deleteProject(Long id) {
         log.info("Удаление проекта");
+        var foundedProject = projectRepository.findById(id)
+                                              .orElseThrow(() -> new EntityNotFoundException(
+                                                      "Передан неверный идентификатор проекта"));
         projectRepository.deleteById(id);
+    }
+
+    @Override
+    public List<TaskOutDto> getAllTasks() {
+        log.info("Получение всех задач");
+        return taskRepository.findAll().stream().map(task -> TaskMapper.toOutDto(task)).collect(Collectors.toList());
     }
 }

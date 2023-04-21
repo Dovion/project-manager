@@ -1,10 +1,13 @@
 package ru.dovion.projectmanager.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,9 +22,13 @@ import ru.dovion.projectmanager.model.dto.TaskDto;
 import ru.dovion.projectmanager.model.dto.TaskOutDto;
 import ru.dovion.projectmanager.service.AdminService;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/admin-api")
+@PreAuthorize("hasAuthority('ADMIN')")
+@SecurityRequirement(name = "basicAuth")
 public class AdminController {
 
     private final AdminService adminService;
@@ -61,5 +68,11 @@ public class AdminController {
     @Operation(summary = "Удаление проекта (Доступно только для администратора)")
     public void deleteProject(@RequestParam Long id) {
         adminService.deleteProject(id);
+    }
+
+    @GetMapping("/task")
+    @Operation(summary = "Получение всех задач")
+    public List<TaskOutDto> getAllTasks() {
+        return adminService.getAllTasks();
     }
 }

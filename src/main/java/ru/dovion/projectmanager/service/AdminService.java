@@ -8,6 +8,8 @@ import ru.dovion.projectmanager.model.dto.ProjectOutDto;
 import ru.dovion.projectmanager.model.dto.TaskDto;
 import ru.dovion.projectmanager.model.dto.TaskOutDto;
 
+import java.util.List;
+
 public interface AdminService {
 
     TaskOutDto updateTask(TaskDto task, Long id);
@@ -19,4 +21,6 @@ public interface AdminService {
     ProjectOutDto updateProject(@RequestBody ProjectDto project, Long id) throws BusinessException;
 
     void deleteProject(@RequestParam Long id);
+
+    List<TaskOutDto> getAllTasks();
 }

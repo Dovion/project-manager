@@ -56,6 +56,10 @@ public class Task {
     @Column(name = "update_date")
     private LocalDateTime updateDate;
 
+    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+
     @PrePersist
     public void onCreate() {
         this.startDate = LocalDateTime.now();
